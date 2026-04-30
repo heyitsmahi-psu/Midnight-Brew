@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Midnight Brew – Coffee &amp; More</title>
+
+  <!-- =============================================
+       INTERNAL CSS
+       ============================================= -->
+  <style>
+    /* ---------- CSS VARIABLES (color palette) ---------- */
+    :root {
+      --brown-dark:   #1a0f07;
+      --brown-mid:    #3d1f0d;
+      --brown-warm:   #6b3a22;
+      --brown-light:  #c4895a;
+      --beige-dark:   #d4b896;
+      --beige-mid:    #e8d5bb;
+      --beige-light:  #f5eedd;
+      --cream:        #fdf8f0;
+      --text-dark:    #1a0f07;
+      --text-mid:     #4a2e1a;
+      --text-muted:   #7a5a3a;
+      --accent:       #c4895a;
+      --accent-hover: #a06840;
+      --white:        #ffffff;
+    }
+
+    /* ---------- RESET & BASE ---------- */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth; /* smooth scroll for nav links */
+    }
+
+    body {
+      font-family: 'Georgia', serif;
+      background-color: var(--cream);
+      color: var(--text-dark);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+
+    /* ---------- FADE-IN ANIMATION ---------- */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    .fade-in {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    /* Staggered delays for sections */
+    .fade-in.delay-1 { animation-delay: 0.1s; }
+    .fade-in.delay-2 { animation-delay: 0.2s; }
+    .fade-in.delay-3 { animation-delay: 0.3s; }
+    .fade-in.delay-4 { animation-delay: 0.4s; }
+
+    /* ---------- TYPOGRAPHY HELPERS ---------- */
+    h1, h2, h3 {
+      font-family: 'Georgia', serif;
+      color: var(--text-dark);
+      line-height: 1.2;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      margin-bottom: 1rem;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.25rem;
+    }
+
+    p {
+      color: var(--text-mid);
+      max-width: 65ch;
+    }
+
+    /* ---------- LAYOUT ---------- */
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    section {
+      padding: 90px 0;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-family: 'Arial', sans-serif;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    /* ---------- BUTTON ---------- */
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      border-radius: 2px;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-outline:hover {
+      background: var(--accent);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    /* =============================================
+       NAVIGATION
+       ============================================= */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--brown-dark);
+      padding: 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 0;
+    }
+
+    .nav-logo {
+      font-family: 'Georgia', serif;
+      font-size: 1.35rem;
+      color: var(--beige-mid);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--beige-dark);
+      font-family: 'Arial', sans-serif;
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    /* Hamburger (mobile) */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--beige-mid);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* =============================================
+       HERO SECTION
+       ============================================= */
+    #hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      overflow: hidden;
+      /* SVG-based background pattern (no external image needed) */
+      background-color: var(--brown-dark);
+    }
+
+    /* Decorative background using CSS only */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 70% 50%, #3d1f0d 0%, transparent 70%),
+        radial-gradient(ellipse 50% 80% at 15% 80%, #6b3a22 0%, transparent 60%);
+      z-index: 0;
+    }
+
+    /* Coffee ring decorative circles */
+    #hero::after {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      border: 80px solid rgba(196, 137, 90, 0.06);
+      right: -100px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 80px 0;
+    }
+
+    .hero-tag-line {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-title {
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      color: var(--cream);
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      max-width: 14ch;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--beige-dark);
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--beige-dark);
+      max-width: 44ch;
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Decorative ring shapes inside hero */
+    .hero-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid rgba(196,137,90,0.15);
+      z-index: 0;
+    }
+
+    .ring-1 { width: 320px; height: 320px; right: 8%; top: 10%; }
+    .ring-2 { width: 200px; height: 200px; right: 13%; top: 22%; }
+    .ring-3 { width: 100px; height: 100px; right: 19%; top: 30%; background: rgba(196,137,90,0.04); }
+
+    /* =============================================
+       ABOUT SECTION
+       ============================================= */
+    #about {
+      background: var(--cream);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    /* Decorative image placeholder */
+    .about-visual {
+      position: relative;
+      height: 440px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--brown-warm);
+    }
+
+    .about-visual-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Cup illustration using pure CSS */
+    .css-cup {
+      position: relative;
+      width: 100px;
+      height: 90px;
+    }
+
+    .cup-body {
+      width: 80px;
+      height: 65px;
+      background: var(--beige-mid);
+      border-radius: 0 0 20px 20px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .cup-body::before {
+      /* steam */
+      content: '';
+      position: absolute;
+      top: -30px;
+      left: 20px;
+      width: 4px;
+      height: 22px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+      animation: steam 2s ease-in-out infinite;
+    }
+
+    .cup-body::after {
+      content: '';
+      position: absolute;
+      top: -30px;
+      left: 38px;
+      width: 4px;
+      height: 28px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 2px;
+      animation: steam 2s ease-in-out infinite 0.4s;
+    }
+
+    .cup-handle {
+      position: absolute;
+      right: 2px;
+      top: 15px;
+      width: 22px;
+      height: 30px;
+      border: 6px solid var(--beige-mid);
+      border-left: none;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .cup-saucer {
+      width: 96px;
+      height: 10px;
+      background: var(--beige-dark);
+      border-radius: 50%;
+      margin: 4px auto 0;
+    }
+
+    @keyframes steam {
+      0%, 100% { opacity: 0.2; transform: translateY(0) scaleX(1); }
+      50%       { opacity: 0.6; transform: translateY(-8px) scaleX(1.2); }
+    }
+
+    .about-visual-label {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--beige-dark);
+    }
+
+    /* Decorative accent block */
+    .about-visual-accent {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 120px;
+      height: 120px;
+      border: 2px solid var(--accent);
+      border-radius: 2px;
+    }
+
+    .about-text p {
+      margin-bottom: 1.2rem;
+      font-size: 1.02rem;
+    }
+
+    .about-stat-row {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--beige-mid);
+    }
+
+    .about-stat strong {
+      display: block;
+      font-size: 2rem;
+      color: var(--accent);
+      font-family: 'Georgia', serif;
+    }
+
+    .about-stat span {
+      font-size: 0.82rem;
+      font-family: 'Arial', sans-serif;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* =============================================
+       MENU SECTION
+       ============================================= */
+    #menu {
+      background: var(--brown-dark);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #menu::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 90% 10%, rgba(107,58,34,0.4) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    #menu h2,
+    #menu .section-label {
+      color: var(--cream);
+    }
+
+    #menu .section-label {
+      color: var(--accent);
+    }
+
+    .menu-intro {
+      color: var(--beige-dark) !important;
+      margin-bottom: 3rem;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .menu-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(196,137,90,0.15);
+      border-radius: 4px;
+      padding: 1.6rem;
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+      cursor: default;
+    }
+
+    .menu-card:hover {
+      background: rgba(196,137,90,0.08);
+      border-color: rgba(196,137,90,0.4);
+      transform: translateY(-4px);
+    }
+
+    .menu-card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+
+    .menu-card h3 {
+      color: var(--cream);
+      font-size: 1.05rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .menu-card p {
+      font-size: 0.88rem;
+      color: var(--beige-dark);
+      margin-bottom: 1rem;
+      max-width: none;
+    }
+
+    .menu-card-price {
+      font-family: 'Georgia', serif;
+      font-size: 1.25rem;
+      color: var(--accent);
+    }
+
+    .menu-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 2px;
+      margin-bottom: 0.6rem;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .tag-hot  { background: rgba(196,137,90,0.2); color: var(--beige-dark); }
+    .tag-cold { background: rgba(58,90,140,0.25); color: #a0b8d8; }
+    .tag-food { background: rgba(80,120,60,0.2);  color: #9dbf84; }
+
+    /* =============================================
+       FEATURED / DRINK OF THE DAY
+       ============================================= */
+    #featured {
+      background: var(--beige-light);
+    }
+
+    .featured-inner {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    /* Visual placeholder for the drink */
+    .featured-visual {
+      background: var(--brown-warm);
+      border-radius: 4px;
+      height: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-visual::before {
+      content: '';
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 40px solid rgba(196,137,90,0.08);
+      top: -60px;
+      right: -60px;
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 1.2rem;
+      left: 1.2rem;
+      background: var(--accent);
+      color: var(--white);
+      font-family: 'Arial', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 2px;
+    }
+
+    .featured-text .section-label {
+      color: var(--accent);
+    }
+
+    .featured-text h2 {
+      font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+      margin-bottom: 1rem;
+    }
+
+    .featured-text p {
+      font-size: 1rem;
+      color: var(--text-mid);
+      margin-bottom: 1.5rem;
+    }
+
+    .featured-detail {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .featured-price {
+      font-size: 2.2rem;
+      font-family: 'Georgia', serif;
+      color: var(--accent);
+    }
+
+    .featured-note {
+      font-size: 0.82rem;
+      font-family: 'Arial', sans-serif;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* =============================================
+       EXPLORE MORE (Random Link Section)
+       ============================================= */
+    #explore {
+      background: var(--brown-mid);
+      text-align: center;
+      padding: 70px 0;
+    }
+
+    #explore h2 {
+      color: var(--cream);
+      margin-bottom: 0.8rem;
+    }
+
+    #explore p {
+      color: var(--beige-dark);
+      margin: 0 auto 2rem;
+      max-width: 50ch;
+      text-align: center;
+    }
+
+    /* =============================================
+       CONTACT SECTION
+       ============================================= */
+    #contact {
+      background: var(--cream);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-info p {
+      font-size: 1rem;
+      margin-bottom: 1.8rem;
+      max-width: 42ch;
+    }
+
+    .contact-details {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .contact-details li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .contact-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--beige-mid);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1rem;
+    }
+
+    .contact-detail-text strong {
+      display: block;
+      font-family: 'Arial', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .contact-detail-text span {
+      color: var(--text-dark);
+      font-size: 0.97rem;
+    }
+
+    /* Simple map placeholder */
+    .map-placeholder {
+      background: var(--beige-mid);
+      border-radius: 4px;
+      height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      border: 1px solid var(--beige-dark);
+    }
+
+    .map-placeholder .map-pin {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+    }
+
+    .map-placeholder span {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* Hours table */
+    .hours-table {
+      margin-top: 2rem;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .hours-table tr {
+      border-bottom: 1px solid var(--beige-mid);
+    }
+
+    .hours-table td {
+      padding: 0.55rem 0;
+      font-size: 0.9rem;
+      color: var(--text-mid);
+    }
+
+    .hours-table td:last-child {
+      text-align: right;
+      color: var(--text-dark);
+    }
+
+    /* =============================================
+       FOOTER
+       ============================================= */
+    footer {
+      background: var(--brown-dark);
+      padding: 2.5rem 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.8rem;
+      color: var(--beige-dark);
+      letter-spacing: 0.06em;
+      max-width: none;
+      margin: 0 auto;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* =============================================
+       RESPONSIVE
+       ============================================= */
+    @media (max-width: 768px) {
+
+      .hamburger { display: flex; }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--brown-dark);
+        flex-direction: column;
+        gap: 0;
+        padding: 0.5rem 0;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links a {
+        display: block;
+        padding: 0.8rem 5%;
+      }
+
+      nav { position: relative; }
+
+      .about-grid,
+      .featured-inner,
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .about-visual { height: 260px; }
+
+      .hero-title { font-size: 2.6rem; }
+
+      .ring-1, .ring-2, .ring-3 { display: none; }
+
+      section { padding: 60px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       NAVIGATION
+       ============================================= -->
+  <nav>
+    <div class="container nav-inner">
+      <a href="#hero" class="nav-logo">Midnight <span>Brew</span></a>
+
+      <!-- Hamburger button for mobile -->
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#featured">Today's Pick</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+  <!-- =============================================
+       HERO SECTION
+       ============================================= -->
+  <section id="hero">
+    <!-- decorative rings -->
+    <div class="hero-ring ring-1"></div>
+    <div class="hero-ring ring-2"></div>
+    <div class="hero-ring ring-3"></div>
+
+    <div class="container hero-content">
+      <p class="hero-tag-line fade-in delay-1">Est. 2019 · Handcrafted Coffee</p>
+
+      <h1 class="hero-title fade-in delay-2">
+        Where every<br/><em>sip tells</em><br/>a story.
+      </h1>
+
+      <p class="hero-subtitle fade-in delay-3">
+        Midnight Brew is your late-night escape — a warm corner of the city
+        where perfectly roasted coffee meets unhurried evenings.
+      </p>
+
+      <div class="hero-cta fade-in delay-4">
+        <a href="#menu" class="btn btn-primary">Explore Our Menu</a>
+        <a href="#about" class="btn btn-outline" style="color: var(--beige-mid); border-color: rgba(212,184,150,0.4);">Our Story</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       ABOUT US SECTION
+       ============================================= -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+
+        <!-- Visual / illustration column -->
+        <div class="about-visual fade-in">
+          <div class="about-visual-inner">
+            <!-- Pure CSS coffee cup -->
+            <div class="css-cup">
+              <div class="cup-body">
+                <div class="cup-handle"></div>
+              </div>
+              <div class="cup-saucer"></div>
+            </div>
+            <p class="about-visual-label">Brewed with love</p>
+          </div>
+          <div class="about-visual-accent"></div>
+        </div>
+
+        <!-- Text column -->
+        <div class="about-text fade-in delay-2">
+          <span class="section-label">Our Story</span>
+          <h2>More than coffee — it's a feeling.</h2>
+
+          <p>
+            Midnight Brew was born in the autumn of 2019 from a simple idea: what if your
+            neighborhood had a place that felt like a warm embrace the moment you walked through
+            the door? A spot where strangers become regulars, and regulars become friends.
+          </p>
+          <p>
+            We source single-origin beans from small family farms across Ethiopia, Colombia,
+            and Guatemala — roasting them in-house every week to preserve their natural character.
+            Every cup is a conversation between the farmer who grew it and the hands that brewed it.
+          </p>
+          <p>
+            Whether you're here for a quiet morning ritual, a late-night study session, or a
+            slow weekend catch-up — pull up a chair. You're always welcome.
+          </p>
+
+          <div class="about-stat-row">
+            <div class="about-stat">
+              <strong>12+</strong>
+              <span>Origin coffees</span>
+            </div>
+            <div class="about-stat">
+              <strong>4.8★</strong>
+              <span>Rating</span>
+            </div>
+            <div class="about-stat">
+              <strong>6yrs</strong>
+              <span>In the city</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       MENU SECTION
+       ============================================= -->
+  <section id="menu">
+    <div class="container">
+      <span class="section-label">What we serve</span>
+      <h2>Our Menu</h2>
+      <p class="menu-intro">
+        Every item on our menu is made to order — nothing sits, nothing waits.
+        Just fresh, honest flavours.
+      </p>
+
+      <div class="menu-grid">
+
+        <!-- Hot Drinks -->
+        <div class="menu-card fade-in delay-1">
+          <span class="menu-tag tag-hot">Hot</span>
+          <span class="menu-card-icon">☕</span>
+          <h3>Espresso</h3>
+          <p>Double shot, rich crema, intense finish. The purist's choice.</p>
+          <span class="menu-card-price">$3.50</span>
+        </div>
+
+        <div class="menu-card fade-in delay-2">
+          <span class="menu-tag tag-hot">Hot</span>
+          <span class="menu-card-icon">☕</span>
+          <h3>Cappuccino</h3>
+          <p>Equal parts espresso, steamed milk, and velvety foam. A timeless balance.</p>
+          <span class="menu-card-price">$4.75</span>
+        </div>
+
+        <div class="menu-card fade-in delay-3">
+          <span class="menu-tag tag-hot">Hot</span>
+          <span class="menu-card-icon">☕</span>
+          <h3>Latte</h3>
+          <p>Smooth espresso softened with silky steamed milk. Mild and comforting.</p>
+          <span class="menu-card-price">$5.25</span>
+        </div>
+
+        <div class="menu-card fade-in delay-1">
+          <span class="menu-tag tag-hot">Hot</span>
+          <span class="menu-card-icon">☕</span>
+          <h3>Flat White</h3>
+          <p>Double ristretto with microfoam milk. Strong, velvety, and no-nonsense.</p>
+          <span class="menu-card-price">$5.00</span>
+        </div>
+
+        <!-- Cold Drinks -->
+        <div class="menu-card fade-in delay-2">
+          <span class="menu-tag tag-cold">Cold</span>
+          <span class="menu-card-icon">🧊</span>
+          <h3>Cold Brew</h3>
+          <p>Steeped 18 hours in cold water. Smooth, chocolatey, never bitter.</p>
+          <span class="menu-card-price">$5.50</span>
+        </div>
+
+        <div class="menu-card fade-in delay-3">
+          <span class="menu-tag tag-cold">Cold</span>
+          <span class="menu-card-icon">🧊</span>
+          <h3>Iced Latte</h3>
+          <p>Espresso over ice, topped with chilled milk. Light and refreshing.</p>
+          <span class="menu-card-price">$5.75</span>
+        </div>
+
+        <!-- Pastries -->
+        <div class="menu-card fade-in delay-1">
+          <span class="menu-tag tag-food">Pastry</span>
+          <span class="menu-card-icon">🥐</span>
+          <h3>Butter Croissant</h3>
+          <p>Baked fresh each morning. Flaky, golden, and unapologetically buttery.</p>
+          <span class="menu-card-price">$3.75</span>
+        </div>
+
+        <div class="menu-card fade-in delay-2">
+          <span class="menu-tag tag-food">Pastry</span>
+          <span class="menu-card-icon">🍰</span>
+          <h3>Cardamom Cake Slice</h3>
+          <p>Our signature bake. Spiced, moist, and pairs perfectly with any coffee.</p>
+          <span class="menu-card-price">$4.50</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       FEATURED – DRINK OF THE DAY
+       ============================================= -->
+  <section id="featured">
+    <div class="container">
+      <div class="featured-inner">
+
+        <!-- Visual -->
+        <div class="featured-visual fade-in">
+          <div class="featured-badge">Drink of the Day</div>
+          <!-- Stylised drink illustration using CSS -->
+          <div style="position: relative; z-index: 1; text-align: center;">
+            <div style="width: 90px; height: 130px; background: var(--brown-dark); border-radius: 8px 8px 14px 14px; margin: 0 auto; position: relative; border: 3px solid var(--beige-dark);">
+              <div style="position: absolute; top: 12px; left: 10px; right: 10px; height: 12px; background: rgba(255,255,255,0.15); border-radius: 4px;"></div>
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(196,137,90,0.35); border-radius: 0 0 11px 11px;"></div>
+            </div>
+            <!-- Straw -->
+            <div style="width: 6px; height: 70px; background: var(--beige-dark); border-radius: 3px; margin: -65px auto 0; margin-left: 58px; transform: rotate(8deg);"></div>
+          </div>
+          <p class="about-visual-label" style="color: var(--beige-mid); font-size: 0.72rem; margin-top: 0.5rem;">Cold Brew Vanilla Float</p>
+        </div>
+
+        <!-- Text -->
+        <div class="featured-text fade-in delay-2">
+          <span class="section-label">Today's Special</span>
+          <h2>Cold Brew Vanilla Float</h2>
+          <p>
+            Our house-made cold brew, poured over a scoop of tahitian vanilla ice cream and
+            finished with a touch of dark caramel. Rich, creamy, and a little indulgent —
+            exactly as it should be.
+          </p>
+          <p>
+            Available every day until we run out. And we always run out.
+          </p>
+          <div class="featured-detail">
+            <span class="featured-price">$6.50</span>
+            <span class="featured-note">Limited daily</span>
+          </div>
+          <a href="#contact" class="btn btn-primary">Find Us &amp; Order</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       EXPLORE MORE (Random Link Section)
+       ============================================= -->
+  <section id="explore">
+    <div class="container fade-in">
+      <span class="section-label" style="color: var(--accent);">Curiosity Corner</span>
+      <h2>Feeling curious?</h2>
+      <p>
+        Good coffee and good knowledge go hand in hand. Step away from the menu
+        for a moment and explore the world's largest free encyclopedia.
+      </p>
+      <a href="https://www.wikipedia.org" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="color: var(--beige-mid); border-color: rgba(212,184,150,0.35);">
+        Explore More →
+      </a>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       CONTACT SECTION
+       ============================================= -->
+  <section id="contact">
+    <div class="container">
+      <span class="section-label">Come find us</span>
+      <h2>Visit Us</h2>
+
+      <div class="contact-grid">
+
+        <!-- Left: info -->
+        <div class="contact-info fade-in">
+          <p>
+            We're tucked on the corner of Elm and 5th — the one with the warm glow in
+            the window and the faint smell of espresso drifting into the street.
+          </p>
+
+          <ul class="contact-details">
+            <li>
+              <div class="contact-icon">📍</div>
+              <div class="contact-detail-text">
+                <strong>Address</strong>
+                <span>42 Elm Street, Corner of 5th Ave<br/>New York, NY 10001</span>
+              </div>
+            </li>
+            <li>
+              <div class="contact-icon">📞</div>
+              <div class="contact-detail-text">
+                <strong>Phone</strong>
+                <span>+1 (212) 555-0188</span>
+              </div>
+            </li>
+            <li>
+              <div class="contact-icon">✉️</div>
+              <div class="contact-detail-text">
+                <strong>Email</strong>
+                <span>hello@midnightbrew.com</span>
+              </div>
+            </li>
+          </ul>
+
+          <!-- Hours table -->
+          <table class="hours-table" style="margin-top: 2rem;">
+            <tr>
+              <td>Monday – Friday</td>
+              <td>7:00 AM – 11:00 PM</td>
+            </tr>
+            <tr>
+              <td>Saturday</td>
+              <td>8:00 AM – 12:00 AM</td>
+            </tr>
+            <tr>
+              <td>Sunday</td>
+              <td>9:00 AM – 10:00 PM</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Right: map placeholder -->
+        <div class="fade-in delay-2">
+          <div class="map-placeholder">
+            <div class="map-pin"></div>
+            <span>42 Elm Street, New York</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- =============================================
+       FOOTER
+       ============================================= -->
+  <footer>
+    <div class="container">
+      <p>
+        © 2026 <a href="#hero">Midnight Brew</a> · Brewed with love in New York City ·
+        <a href="#menu">Menu</a> · <a href="#contact">Contact</a>
+      </p>
+    </div>
+  </footer>
+
+
+  <!-- =============================================
+       INTERNAL JAVASCRIPT
+       ============================================= -->
+  <script>
+    /* ---- Mobile hamburger menu ---- */
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    /* Close nav when a link is clicked (mobile) */
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    /* ---- Scroll-triggered fade-in using IntersectionObserver ---- */
+    // Resets the animation so elements fade in when they enter the viewport,
+    // not just on page load.
+    const faders = document.querySelectorAll('.fade-in');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Kick off the CSS animation by ensuring it's set
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target); // only animate once
+        }
+      });
+    }, {
+      threshold: 0.12,        // trigger when 12% of element is visible
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    // Pause all fade-ins until the observer triggers them
+    faders.forEach(el => {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+
+    /* ---- Active nav link highlight on scroll ---- */
+    const sections = document.querySelectorAll('section[id]');
+    const navItems = document.querySelectorAll('.nav-links a');
+
+    const highlightNav = () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 80;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      navItems.forEach(a => {
+        a.style.color = '';
+        if (a.getAttribute('href') === '#' + current) {
+          a.style.color = 'var(--accent)';
+        }
+      });
+    };
+
+    window.addEventListener('scroll', highlightNav, { passive: true });
+  </script>
+
+</body>
+</html>
